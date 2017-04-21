@@ -14,12 +14,11 @@ namespace Importer.Classes_File
         private TitleFinder findTitle;
         private FileCleaner cleanFile;
 
-        private string pattern = "[>]{1}[\\s*\\d*\\w{2,}]+\\s*[-:;.,|\\s*\\d*\\w*]*[<]{1}";
+        private string pattern = "[>]{1}[-\\s*\\d*\\w{2,}]+\\s*[-:;.,|/\\s*\\d*\\w*]*[<]{1}";
         private string title;
 
-        private List<List<string>> data_content = new List<List<string>>();
-        private List<string> columns_names;
-
+        //private List<List<string>> data_content = new List<List<string>>();
+        
         public FileOperationCenter(OpenFileDialog openFileDialog1)
         {
             findPattern = new PatternFinder(pattern);
@@ -51,15 +50,16 @@ namespace Importer.Classes_File
                 case "Dostawca - saldo na dzień":
                     break;
                 case "Nabywca - saldo na dzień":
+                    cleanFile = new CleanerNabywca(readedFile, findPattern);
                     break;
                 case "STAN ZAPASÓW":
-                    cleanFile = new CleanerNabywca(readedFile, findPattern);
+                    cleanFile = new CleanerStan(readedFile, findPattern);
                     break;
                 default:
                     break;
             }
         }
-        public List<string> getHeader()
+        public List<List<string>> getHeader()
         {
             return cleanFile.getHeader();
         }

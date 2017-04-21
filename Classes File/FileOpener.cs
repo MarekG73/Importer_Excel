@@ -1,10 +1,11 @@
 ﻿using System.Windows.Forms;
 using System.IO;
 using System.Text;
+using System;
 
 namespace Importer.Classes_File
 {
-    class FileOpener
+    class FileOpener : IDisposable
     {
         //Otwiera plik na podstawie nazwy uzyskanej z okienka dialogowego.
         private string filename, filepath;
@@ -16,7 +17,7 @@ namespace Importer.Classes_File
         // Instancja okienka używanego do wyszukania pliku przekazywana jest jako parametr do konstruktora.
         public FileOpener(OpenFileDialog dialog)
         {
-            enc = Encoding.GetEncoding(1250);
+            Encoding enc = Encoding.GetEncoding(1250);
             openDialog = dialog;
             filename = openDialog.SafeFileName;
             filepath = openDialog.FileName;
@@ -38,6 +39,11 @@ namespace Importer.Classes_File
         {
             // Zwraca otworzony strumień do odczytu danych z pliku.
             return stream;
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

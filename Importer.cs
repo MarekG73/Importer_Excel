@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Importer.Classes_File;
 using Importer.Classes_Excel;
+using System;
 
 namespace Importer_dla_Excela
 {
@@ -19,7 +20,7 @@ namespace Importer_dla_Excela
         private List<List<string>> data_in_array = new List<List<string>>();
         private List<string> summary_in_array = new List<string>();
         private List<string> document_header = new List<string>();
-        
+
         Control current_textbox;
         Control prev_textbox;
 
@@ -34,22 +35,23 @@ namespace Importer_dla_Excela
             {
                 file = new FileOperationCenter(openFileDialog1);
                 boxFilename.Text = file.getBoxFilenameText();
-                //cleaned_content = file.getCleanFile();//pobranie zawartości po czyszczeniu
-
-                document_header = file.getHeader();
+                
+                document_header = file.getHeader()[0];
                 columns_names_in_array = file.getColumnsNames();
                 data_in_array = file.getDataLines();
                 summary_in_array = file.getSummary();
-
-                textBoxRaportTitle.Text = document_header[0];
-                //excelFile = new ExcelOperationCenter(ref file_in_array);
-                if(document_header.Count > 0)
+                
+                textBoxRaportTitle.Text = document_header[0].ToString();
+                ////////////////////////////////////////////
+                textBox3.Text = DateTime.Now.ToLongTimeString();
+                excelFile = new ExcelOperationCenter(data_in_array);
+                textBox4.Text = DateTime.Now.ToLongTimeString();
+                ////////////////////////////////////////////
+                if (document_header.Count > 0)
                 {
                     buttonRunExcel.Enabled = true;
                     buttonSaveXLS.Enabled = true;
                 }
-                makeColumnsNames();
-                //richTextBox1.Lines = document_header.ToArray();//temp
             }
         }
         private void buttonSettings_MouseClick(object sender, MouseEventArgs e)
@@ -120,67 +122,62 @@ namespace Importer_dla_Excela
 
         private void makeColumnsNames()
         {
-            int ile = columns_names_in_array.Count;
-            tablePanel1.ColumnCount = ile;
-            this.tablePanel1.Size = new System.Drawing.Size(ile * 87, 24);
+            //int cols = columns_names_in_array.Count;
+            //int rows = data_in_array.Count;
+            //tablePanel1.ColumnCount = cols;
+            //tablePanel1.RowCount = rows;
+            //this.tablePanel1.Size = new System.Drawing.Size(cols * 87, 24);
 
-            for (int i = 0; i < ile; i++)
-            {
-                fields.Add(new TextBox());
-                tablePanel1.Controls.Add(this.fields[i], i, 0);
-                this.fields[i].AllowDrop = true;
-                this.fields[i].BackColor = System.Drawing.Color.White;
-                this.fields[i].BorderStyle = BorderStyle.FixedSingle;
-                this.fields[i].Cursor = System.Windows.Forms.Cursors.Hand;
-                this.fields[i].Dock = System.Windows.Forms.DockStyle.Fill;
-                this.fields[i].Font = new System.Drawing.Font("Cambria", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                this.fields[i].Location = new System.Drawing.Point(1 + i * 86, 1);
-                this.fields[i].Margin = new System.Windows.Forms.Padding(0);
-                this.fields[i].MaximumSize = new System.Drawing.Size(85, 20);
-                this.fields[i].MinimumSize = new System.Drawing.Size(85, 20);
-                this.fields[i].Multiline = true;
-                this.fields[i].Name = "A" + i;
-                this.fields[i].Size = new System.Drawing.Size(85, 20);
-                this.fields[i].TabIndex = 100 + i;
-                this.fields[i].TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-                this.fields[i].DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBox_DragDrop);
-                this.fields[i].DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBox_DragEnter);
-                this.fields[i].MouseDown += new System.Windows.Forms.MouseEventHandler(this.TextBox_MouseDown);
-                this.fields[i].Text = columns_names_in_array[i];
-                this.tablePanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-
-                data_fields.Add(new TextBox());
-                tablePanel1.Controls.Add(this.data_fields[i], i, 1);
-                this.data_fields[i].AllowDrop = true;
-                this.data_fields[i].BackColor = System.Drawing.Color.White;
-                this.data_fields[i].BorderStyle = BorderStyle.FixedSingle;
-                this.data_fields[i].Cursor = System.Windows.Forms.Cursors.Hand;
-                this.data_fields[i].Dock = System.Windows.Forms.DockStyle.Fill;
-                this.data_fields[i].Font = new System.Drawing.Font("Cambria", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                this.data_fields[i].Location = new System.Drawing.Point(1 + i * 86, 1);
-                this.data_fields[i].Margin = new System.Windows.Forms.Padding(0);
-                this.data_fields[i].MaximumSize = new System.Drawing.Size(85, 20);
-                this.data_fields[i].MinimumSize = new System.Drawing.Size(85, 20);
-                this.data_fields[i].Multiline = true;
-                this.data_fields[i].Name = "A" + i;
-                this.data_fields[i].Size = new System.Drawing.Size(85, 20);
-                this.data_fields[i].TabIndex = 200 + i;
-                this.data_fields[i].TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-                this.data_fields[i].DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBox_DragDrop);
-                this.data_fields[i].DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBox_DragEnter);
-                this.data_fields[i].MouseDown += new System.Windows.Forms.MouseEventHandler(this.TextBox_MouseDown);
-                this.data_fields[i].Text = data_in_array[0][i];//do zmiany, to tylko jedna linia próbna!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                this.tablePanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-
-            }
+            //for (int i = 0; i < cols; i++)
+            //{
+            //    fields.Add(new TextBox());
+            //    fields[i].AllowDrop = true;
+            //    fields[i].BorderStyle = BorderStyle.FixedSingle;
+            //    fields[i].Cursor = System.Windows.Forms.Cursors.Hand;
+            //    fields[i].Dock = System.Windows.Forms.DockStyle.Fill;
+            //    fields[i].Font = new System.Drawing.Font("Cambria", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            //    fields[i].Location = new System.Drawing.Point(1 + i * 86, 1);
+            //    fields[i].Margin = new System.Windows.Forms.Padding(0);
+            //    fields[i].Multiline = true;
+            //    fields[i].Size = new System.Drawing.Size(85, 20);
+            //    fields[i].TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            //    fields[i].DragDrop += new System.Windows.Forms.DragEventHandler(TextBox_DragDrop);
+            //    fields[i].DragEnter += new System.Windows.Forms.DragEventHandler(TextBox_DragEnter);
+            //    fields[i].MouseDown += new System.Windows.Forms.MouseEventHandler(TextBox_MouseDown);
+            //    fields[i].Text = columns_names_in_array[i];
+                
+            //    ///////////////////////////////////////////////////////////////////////////////////////////////////
+            //    data_fields.Add(new TextBox());
+            //    data_fields[i].AllowDrop = true;
+            //    data_fields[i].BorderStyle = BorderStyle.FixedSingle;
+            //    data_fields[i].Cursor = System.Windows.Forms.Cursors.Hand;
+            //    data_fields[i].Dock = System.Windows.Forms.DockStyle.Fill;
+            //    data_fields[i].Font = new System.Drawing.Font("Cambria", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            //    data_fields[i].Location = new System.Drawing.Point(1 + i * 86, 1);
+            //    data_fields[i].Margin = new System.Windows.Forms.Padding(0);
+            //    data_fields[i].Multiline = true;
+            //    data_fields[i].Size = new System.Drawing.Size(85, 20);
+            //    data_fields[i].TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            //    data_fields[i].DragDrop += new System.Windows.Forms.DragEventHandler(TextBox_DragDrop);
+            //    data_fields[i].DragEnter += new System.Windows.Forms.DragEventHandler(TextBox_DragEnter);
+            //    data_fields[i].MouseDown += new System.Windows.Forms.MouseEventHandler(TextBox_MouseDown);
+            //    data_fields[i].Text = data_in_array[0][i];
+            //}
+            //for (int i = 0; i < cols; i++)
+            //{
+            //    tablePanel1.Controls.Add(fields[i], i, 0);
+            //    tablePanel1.Controls.Add(data_fields[i], i, 1);
+            //}
+            //tablePanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
         }
         private void TextBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs args)
         {
             current_textbox = (TextBox)sender;
-
+            
             if (args.Button == MouseButtons.Left)
             {
                 current_textbox.DoDragDrop(current_textbox.Text, DragDropEffects.Copy);
+                
                 if (prev_textbox != null)
                 {
                     prev_textbox.BackColor = System.Drawing.Color.White;
@@ -210,24 +207,10 @@ namespace Importer_dla_Excela
         private void TextBox_DragDrop(object sender, System.Windows.Forms.DragEventArgs args)
         {
             TextBox txt = (TextBox)sender;
+
             TextBox source = (TextBox)current_textbox;
             source.Text = txt.Text;
             txt.Text = (string)args.Data.GetData(DataFormats.Text);
-        }
-
-        private void button1_MouseClick(object sender, MouseEventArgs e)//element temp, treść do metody sumującej dokument
-        {
-            columns_names_in_array.Clear();
-
-            for (int i = 0; i < fields.Count; i++)
-            {
-                string colname = fields[i].Text;
-                columns_names_in_array.Add(colname);
-            }
-            foreach (string col in columns_names_in_array)
-            {
-                //richTextBox1.AppendText(col);
-            }
         }
 
     }

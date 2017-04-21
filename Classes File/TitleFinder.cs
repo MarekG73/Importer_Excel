@@ -28,7 +28,7 @@ namespace Importer.Classes_File
 
             while (end != true)
             {
-                read_line = readedFile.getLine();
+                read_line = readedFile.getLine().ToString();
                 if (first_table == false && read_line.Contains("<TABLE"))//pomiń pierwszy znacznik <TABLE
                 {
                     first_table = true;

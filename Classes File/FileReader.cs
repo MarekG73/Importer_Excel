@@ -8,8 +8,7 @@ namespace Importer.Classes_File
         //Odczytuje z pliku wiersz
         StreamReader stream;
         private string line;
-        private string title;
-
+        
         public FileReader(StreamReader strm)
         {
             stream = strm;

@@ -1,40 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Excel = Microsoft.Office.Interop.Excel;
-using Importer.Classes_Excel;
 
-namespace Importer_dla_Excela
+namespace Importer.Classes_Excel
 {
-    class ExcelFileCreator
+    abstract class ExcelFileCreator
     {
-        private Excel.Application excelDocument = new Microsoft.Office.Interop.Excel.Application();
-        private Excel.Workbook xlWorkBook;
-        private Excel.Worksheet xlWorkSheet;
-        private Excel.Range formatRange;
-        private object misVal = System.Reflection.Missing.Value;//null
+        protected Excel.Application excelDocument = new Microsoft.Office.Interop.Excel.Application();
+        protected Excel.Workbook xlWorkBook;
+        protected Excel.Worksheet xlWorkSheet;
+        protected Progress progWindow;
+        protected object misVal = System.Reflection.Missing.Value;//null
+        protected int columns_number;
+        protected int rows_number;
+        protected int progBarValue;
 
-        List<ExcelCellData> documentHead;
-        
-        public ExcelFileCreator(List<ExcelCellData> docHead)
+        protected List<List<string>> documentContent;
+                
+        public ExcelFileCreator(List<List<string>> sourceFile)
         {
             xlWorkBook = excelDocument.Workbooks.Add(misVal);
             xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-            documentHead = new List<ExcelCellData>(docHead);
-            makeExcelDocumentHead();
+            documentContent = new List<List<string>>(sourceFile);
+            makeExcelDocument();
         }
+        //Buduje dokument Excela z zawartości List<ExcelCellData>
+        protected abstract void makeExcelDocument();
         
-        private void makeExcelDocumentHead()
-        {
-            foreach(ExcelCellData cellData in documentHead)
-            {
-                formatRange = xlWorkSheet.get_Range("A1", "Z5");
-                formatRange.Font.Size = 8;
-                xlWorkSheet.Cells[cellData.row, cellData.column] = cellData.content;
-                Excel.Range cell1 = xlWorkSheet.Cells[cellData.row, cellData.column];
-                Excel.Range cell2 = xlWorkSheet.Cells[cellData.row, cellData.column + cellData.content.Length/12];
-                xlWorkSheet.get_Range(cell1, cell2).Merge(false);
-            }
-        }
         public Excel.Workbook getWorkbook()
         {
             return xlWorkBook;
@@ -44,7 +36,35 @@ namespace Importer_dla_Excela
         {
             xlWorkBook.Close(true, misVal, misVal);
             excelDocument.Quit();
-            
+        }
+        public string makeDate(string currDate)
+        {
+            string result = "", current = currDate;
+            if (current.Length == 8 && !current.Contains("Suma PLN"))
+            {
+                int year = int.Parse(current.Substring(6));
+                current = current.Remove(5);
+                int month = int.Parse(current.Substring(3));
+                current = current.Remove(2);
+                int day = int.Parse(current);
+
+                var date = new DateTime(year + 2000, month, day);
+                result = date.ToString("d");
+            }
+
+            return result;
+        }
+        protected void setValue(int rw, int cl, string vl)
+        {
+            xlWorkSheet.Cells[rw, cl].Value = vl;
+        }
+        protected void setNumFormat(int rw, int cl, string frm)
+        {
+            xlWorkSheet.Cells[rw, cl].NumberFormat = frm;
+        }
+        protected void setAlignment(int rw, int cl, int al)
+        {
+            xlWorkSheet.Cells[rw, cl].HorizontalAlignment = al;
         }
     }
 }

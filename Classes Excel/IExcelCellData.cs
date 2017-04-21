@@ -6,10 +6,6 @@
         {
             get;
         }
-        string format
-        {
-            get;
-        }
         int column
         {
             get;

@@ -6,16 +6,16 @@ namespace Importer.Classes_File
     {
         public CleanerNabywca(FileReader fr, PatternFinder pf)
             : base (fr, pf)
-        {            
+        {
         }
-
-        //Podział pliku według znaczników <TABLE>
         override protected void splitFileByTable()
         {
+            table_block = new List<string>();
             data_blocks = new List<List<string>>();
+            bool summary_stamp = false;
             bool first_table = false;
-            bool last_table = false;
-
+            int counter = 0;
+            
             while ((readed_line = readedFile.getLine()) != "EOF")
             {
                 if (first_table == false && readed_line.Contains("<TABLE"))//pomiń pierwszy znacznik <TABLE
@@ -23,75 +23,124 @@ namespace Importer.Classes_File
                     first_table = true;
                     continue;
                 }
-                if (readed_line.Contains("<TABLE") && first_table == true)
+                if (readed_line.Contains("<TABLE"))
                 {
-                    table_block = new List<string>();
                     while (!readed_line.Contains("</TABLE>"))
                     {
-                        if ((pattern_result = findPattern.search(readed_line)) != null)
+                        table_block = new List<string>();
+                        if (readed_line.Contains("<TR>"))
                         {
-                            table_block.Add(pattern_result);
+                            while (!readed_line.Contains("</TR>"))
+                            {
+                                if ((pattern_result = findPattern.search(readed_line)) != null)
+                                {
+                                    if (pattern_result == "Strona")
+                                    {
+                                        break; 
+                                    }
+                                    table_block.Add(pattern_result);
+                                    counter++;
+                                }
+                                readed_line = readedFile.getLine();
+                            }
+                            if (counter == 4)//podsumowanie
+                            {
+                                counter = 0;
+                                data_blocks.Add(table_block);
+                                summary_stamp = true;
+                                continue;
+                            }
+                            if (summary_stamp == true && counter == 2)//podsumowanie
+                            {
+                                counter = 0;
+                                data_blocks.Add(table_block);
+                            }
+                            data_blocks.Add(table_block);
                         }
+                        
                         readed_line = readedFile.getLine();
-                        if (readed_line.ToLower().Contains("suma"))
-                        {
-                            last_table = true;
-                        }
                     }
-                    data_blocks.Add(table_block);
-
-                }
-                //dodaje ostatnią pozycję, błędnie umieszczoną na końcu poza blokami
-                if (last_table == true && (pattern_result = findPattern.search(readed_line)) != null && pattern_result.Length > 2)
-                {
-                    table_block = new List<string>();
-                    table_block.Add(pattern_result);
-                    data_blocks.Add(table_block);
                 }
             }
         }
-
         override protected void setNewColumnNames()
         {
-            columns_names = new List<string>(){"Nr. zapasu", "Opis 1", "Opis 2", "Data", "Typ zapisu", "Dostawca",
-                    "Podst. j.m.", "Ilość", "Nr. partii", "Koszt jednostkowy", "Wycena zapasów", "Kod lokalizacji" };
+            columns_names = new List<string>(){"Data księgowania", "Typ dokumentu", "Nr dokumentu", "Opis", "Waluta", "Kwota",
+                    "Kwota PLN", "Nr zapisu" };
         }
-        //tworzy podsumowanie całości
         override protected void makeSummary()
         {
-            summary = new List<string>();
-            int sum_block_start = data_blocks.FindIndex((data_blocks) => { return data_blocks.Count == 7; });
-            int sum_position = data_blocks[sum_block_start].Count - 1;
-            summary.Add(data_blocks[sum_block_start][sum_position]);
-            summary.Add(data_blocks[sum_block_start + 1][0]);
-            data_blocks[sum_block_start].RemoveAt(sum_position);
-            data_blocks.RemoveAt(sum_block_start + 1);
+            int cnt = data_blocks.Count - 1;
+            resultSummary = new List<List<string>>();
+            while ((summary = data_blocks[cnt--]).Count != 3)
+            {
+                if (summary.Count != 0)
+                {
+                    resultSummary.Add(summary);
+                }
+            }
+            resultSummary.Reverse();
         }
-        //tworzy linie danych
         override protected void makeData()
         {
-            bool data = false;
-            data_lines = new List<List<string>>();
+            bool section_summary = false;
+            bool section_end = true;
+            bool prev_block_3 = false;
+            bool end_summary = false;
+            bool data_block = true;
+            data_lines = new List<List<string>>(header);
+
+            data_lines.Add(columns_names);
 
             foreach (List<string> block in data_blocks)
             {
-                if (block.Count == 2)
+                if (block.Count == 2 && section_end == true && end_summary == false)
+                {
+                    temp_data_line = new List<string>() { " ",block[0], block[1] };
+                    data_lines.Add(temp_data_line);
+                    section_end = false;
+                    prev_block_3 = false;
+                    continue;
+                }
+                if (block.Count == 8)
                 {
                     temp_data_line = new List<string>(block);
-                    data = true;
-                }
-                if (data == true && block.Count == 10)
-                {
-                    temp_data_line.AddRange(block);
-                    splitCell();
                     data_lines.Add(temp_data_line);
-                    data = false;
+                    data_block = true;
+                    continue;
                 }
-                if (data == false && block.Count == 6)
+                if (block.Count == 4 && data_block == true)
                 {
-                    data_lines.Add(block);
+                    temp_data_line = new List<string>() { " ", " ", block[0], " ", block[1], block[2], block[3] };
+                    data_lines.Add(temp_data_line);
+                    section_summary = true;
+                    data_block = false;
+                    continue;
+                }
+                if (section_summary == true && block.Count == 3)
+                {
+                    temp_data_line = new List<string>() { " ", " ", block[1], " ", block[0], " ", block[2] };
+                    data_lines.Add(temp_data_line);
+                    section_summary = false;
+                    section_end = true;
+                    prev_block_3 = true;
+                    continue;
+                }
+                if (block.Count == 4 && prev_block_3 == true)
+                {
+                    temp_data_line = new List<string>() { " ", " ", block[0], " ", block[1], block[2], block[3] };
+                    data_lines.Add(temp_data_line);
+                    end_summary = true;
+                    continue;
+                }
+                if (block.Count == 2 && end_summary == true)
+                {
+                    temp_data_line = new List<string>() { " ", " ", block[0], " ", " ", " ", block[1] };
+                    data_lines.Add(temp_data_line);
+                    continue;
                 }
             }
         }
     }
 }
+
