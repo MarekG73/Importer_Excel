@@ -3,9 +3,12 @@ using System.Text;
 
 namespace Importer.Classes_File
 {
+    /// <summary>
+    /// Odczytuje z pliku wiersz.
+    /// Konwertuje odczytaną stronę kodową - 1250 na utf-8
+    /// </summary>
     class FileReader
     {
-        //Odczytuje z pliku wiersz
         StreamReader stream;
         private string line;
         

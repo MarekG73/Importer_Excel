@@ -1,33 +1,27 @@
 ﻿using System.Collections.Generic;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
-using System.Windows.Forms;
-using System;
 
 namespace Importer.Classes_Excel
 {
     class ExcelOperationCenter
     {
-        private ExcelFileContent content;
         private ExcelFileCreator excelCreateNewFile;
         private object misVal = System.Reflection.Missing.Value;//null
 
         private List<List<string>> sourceFileValues;
         
-        string file_path = "\"C:\\Users\\Media\\Desktop\\raport.xls\"";
-        string path = "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\EXCEL.EXE";
+        string file_path = "\"C:\\Users\\Media\\Desktop\\raport.xls\"";////
+        string path = "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\EXCEL.EXE";////
         private int columns_number;
         private string doc_title;
 
         public ExcelOperationCenter(List<List<string>> sourceFile)
         {
-            //content = new ExcelFileContent(sourceFile);
-            //content.ExtractElements();
             sourceFileValues = new List<List<string>>(sourceFile);
             doc_title = sourceFile[0][0];
             columns_number = sourceFile[0].Count;
-            chooseCreator();
-            
+            chooseCreator(); 
         }
         public void saveExcelFile()
         {
@@ -48,6 +42,7 @@ namespace Importer.Classes_Excel
             switch (doc_title)
             {
                 case "Dostawca - saldo na dzień":
+                    excelCreateNewFile = new ExcelFileCreatorDostawca(sourceFileValues);
                     break;
                 case "Nabywca - saldo na dzień":
                     excelCreateNewFile = new ExcelFileCreatorNabywca(sourceFileValues);

@@ -69,11 +69,17 @@ namespace Importer.Classes_Excel
                             Task valTask1 = Task.Run(() => setValue(rownum, colnum, goodDate));
                             Task.WaitAll(valTask1, numTask1, alignTask1);
                         }
-                        else
+                        else if (colnum == 4 && rownum > 8)
                         {
-                            Task alignTask2 = Task.Run(() => setAlignment(rownum, colnum, 3));
+                            Task alignTask2 = Task.Run(() => setAlignment(rownum, colnum, 1));
                             Task valTask2 = Task.Run(() => setValue(rownum, colnum, cellVal));
                             Task.WaitAll(valTask2, alignTask2);
+                        }
+                        else
+                        {
+                            Task alignTask3 = Task.Run(() => setAlignment(rownum, colnum, 3));
+                            Task valTask3 = Task.Run(() => setValue(rownum, colnum, cellVal));
+                            Task.WaitAll(valTask3, alignTask3);
                         }
                     }
                     colnum++;

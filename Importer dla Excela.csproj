@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes Excel\ExcelCellData.cs" />
+    <Compile Include="Classes Excel\ExcelFileCreatorDostawca.cs" />
     <Compile Include="Classes Excel\ExcelFileCreatorNabywca.cs" />
     <Compile Include="Classes Excel\ExcelFileCreator.cs" />
     <Compile Include="Classes Excel\ExcelFileCreatorStan.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Classes Excel\Progress.Designer.cs">
       <DependentUpon>Progress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Classes File\CleanerDostawca.cs" />
     <Compile Include="Classes File\CleanerNabywca.cs" />
     <Compile Include="Classes File\CleanerStan.cs" />
     <Compile Include="Classes File\FileCleaner.cs" />
@@ -95,10 +97,8 @@
     <Compile Include="Classes File\FileOperationCenter.cs" />
     <Compile Include="Classes File\FileReader.cs" />
     <Compile Include="Classes File\TitleFinder.cs" />
-    <Compile Include="Classes Setup\RangeStruct.cs" />
     <Compile Include="Classes Setup\SetupDataStruct.cs" />
-    <Compile Include="Classes Setup\SetupFileFinder.cs" />
-    <Compile Include="Classes Setup\SetupFileRW.cs" />
+    <Compile Include="Classes Setup\SetupFileReader.cs" />
     <Compile Include="Classes Setup\SetupOperationCenter.cs" />
     <Compile Include="Importer.cs">
       <SubType>Form</SubType>
@@ -123,11 +123,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs">
+    <Compile Include="SettingsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
+    <Compile Include="SettingsWindow.Designer.cs">
+      <DependentUpon>SettingsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="TypeDetector.cs" />
   </ItemGroup>
@@ -142,8 +142,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Settings.resx">
-      <DependentUpon>Settings.cs</DependentUpon>
+    <EmbeddedResource Include="SettingsWindow.resx">
+      <DependentUpon>SettingsWindow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

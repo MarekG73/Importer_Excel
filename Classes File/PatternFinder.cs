@@ -2,6 +2,9 @@
 
 namespace Importer.Classes_File
 {
+    /// <summary>
+    /// Na podstawie wzorca /pattern/ przekazanego z FileOperationCenter wyszukuje dopasowań w podanym ciągu /source/
+    /// </summary>
     class PatternFinder
     {
         Match match;

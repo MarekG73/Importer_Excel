@@ -28,15 +28,12 @@ namespace Importer.Classes_File
             
             splitFileByTable();
             makeHeader();
-            makeColumns();
             setNewColumnNames();
             removeNonData();
-            //makeSummary();
             makeData();
         }
         protected abstract void splitFileByTable();//podział pliku według <TABLE>
         protected abstract void setNewColumnNames();//nazwy kolumn inne niż odczytane
-        protected abstract void makeSummary();//tworzy podsumowanie całości
         protected abstract void makeData();//tworzy linie danych
         protected void makeHeader()
         {
@@ -47,8 +44,7 @@ namespace Importer.Classes_File
                 data_blocks[i].ForEach(tmp.Add);
             }
             data_blocks.RemoveRange(0, 4);
-            //tmp.RemoveRange(tmp.FindIndex((tmp) => { return tmp.ToString().Contains("Strona"); }), 2);//usunięcie "Strona 1"
-
+            
             for (int i = 0; i < 6; i++)
             {
                 header.Add(new List<string>());
@@ -77,8 +73,12 @@ namespace Importer.Classes_File
                     fillSpaces(header[i], 8);
                 }
             }
-            
         }
+        /// <summary>
+        /// Wstawia do kontenera 'List' podaną ilość spacji
+        /// </summary>
+        /// <param name="lst">Kontener do wstawiania</param>
+        /// <param name="elem">Ilość spacji</param>
         protected void fillSpaces(List<string> lst, int elem)
         {
             for(int i = 0; i < elem; i++)
@@ -86,12 +86,6 @@ namespace Importer.Classes_File
                 lst.Add(" ");
             }
         }
-        protected void makeColumns()
-        {
-            original_columns_names = new List<string>(data_blocks[0]);//odczytane nazwy kolumn
-            data_blocks.RemoveAt(0);
-        }
-        
         protected void removeNonData()
         {
             try
@@ -105,12 +99,10 @@ namespace Importer.Classes_File
             {
                 return;
             }
-            
         }
-
-        protected void splitCell()
+        protected void splitCell(List<string> splitted_data_line)
         {
-            string text_readed = temp_data_line[1].ToString();
+            string text_readed = splitted_data_line[1].ToString();
             int end1 = 0, start2 = 0, spc = 0;
 
             for (int pos = 0; pos < text_readed.Length; pos++)
@@ -132,25 +124,17 @@ namespace Importer.Classes_File
             string res2 = text_readed.Substring(start2);
             string res1 = text_readed.Remove(end1);
 
-            temp_data_line[1] = res1;
-            temp_data_line[2] = res2;
+            splitted_data_line[1] = res1;
+            splitted_data_line.Add(res2);
         }
                 
         public List<List<string>> getHeader()
         {
             return header;
         }
-        public List<string> getColumnsNames()
-        {
-            return columns_names;
-        }
         public List<List<string>> getDataLines()
         {
             return data_lines;
-        }
-        public List<string> getSummary()
-        {
-            return summary;
         }
     }
 }

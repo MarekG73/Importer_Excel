@@ -2,9 +2,9 @@
 
 namespace Importer.Classes_File
 {
-    class CleanerNabywca : FileCleaner
+    class CleanerDostawca : FileCleaner
     {
-        public CleanerNabywca(FileReader fr, PatternFinder pf)
+        public CleanerDostawca(FileReader fr, PatternFinder pf)
             : base (fr, pf)
         {
         }
@@ -90,10 +90,27 @@ namespace Importer.Classes_File
                     prev_block_3 = false;
                     continue;
                 }
+                if (block.Count == 6)
+                {
+                    //temp_data_line = new List<string>(block);
+                    block.Insert(1, " ");
+                    block.Insert(4, " ");
+                    data_lines.Add(temp_data_line);
+                    data_block = true;
+                    continue;
+                }
+                if (block.Count == 7)
+                {
+                    //temp_data_line = new List<string>(block);
+                    block.Insert(4, " ");
+                    data_lines.Add(temp_data_line);
+                    data_block = true;
+                    continue;
+                }
                 if (block.Count == 8)
                 {
-                    temp_data_line = new List<string>(block);
-                    data_lines.Add(temp_data_line);
+                    //temp_data_line = new List<string>(block);
+                    data_lines.Add(block);
                     data_block = true;
                     continue;
                 }

@@ -41,32 +41,29 @@
             this.labelRaportTitle = new System.Windows.Forms.Label();
             this.labelFileName = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.makeFile = new System.Windows.Forms.Button();
+            this.labelReady = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "\"Pliki raportów (*.HTM, *.HTML)|*.htm; *.html\"";
+            this.openFileDialog1.Filter = "Pliki raportów (*.HTM, *.HTML)|*.htm; *.html";
             // 
             // buttonOpenFile
             // 
             this.buttonOpenFile.BackColor = System.Drawing.SystemColors.Control;
             this.buttonOpenFile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonOpenFile.Font = new System.Drawing.Font("Cambria", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.buttonOpenFile.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Bold);
             this.buttonOpenFile.Image = ((System.Drawing.Image)(resources.GetObject("buttonOpenFile.Image")));
-            this.buttonOpenFile.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.buttonOpenFile.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonOpenFile.Location = new System.Drawing.Point(12, 12);
             this.buttonOpenFile.Name = "buttonOpenFile";
-            this.buttonOpenFile.Size = new System.Drawing.Size(80, 55);
+            this.buttonOpenFile.Size = new System.Drawing.Size(124, 55);
             this.buttonOpenFile.TabIndex = 1;
             this.buttonOpenFile.Text = "Otwórz HTM";
-            this.buttonOpenFile.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.buttonOpenFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonOpenFile.UseVisualStyleBackColor = false;
             this.buttonOpenFile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.buttonOpenFile_MouseClick);
             this.buttonOpenFile.MouseEnter += new System.EventHandler(this.buttonOpenFile_MouseEnter);
@@ -93,7 +90,7 @@
             this.buttonSaveXLS.Font = new System.Drawing.Font("Cambria", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.buttonSaveXLS.Image = ((System.Drawing.Image)(resources.GetObject("buttonSaveXLS.Image")));
             this.buttonSaveXLS.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.buttonSaveXLS.Location = new System.Drawing.Point(99, 12);
+            this.buttonSaveXLS.Location = new System.Drawing.Point(372, 136);
             this.buttonSaveXLS.Name = "buttonSaveXLS";
             this.buttonSaveXLS.Size = new System.Drawing.Size(80, 55);
             this.buttonSaveXLS.TabIndex = 2;
@@ -110,13 +107,14 @@
             this.buttonRunExcel.Font = new System.Drawing.Font("Cambria", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.buttonRunExcel.Image = ((System.Drawing.Image)(resources.GetObject("buttonRunExcel.Image")));
             this.buttonRunExcel.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.buttonRunExcel.Location = new System.Drawing.Point(186, 12);
+            this.buttonRunExcel.Location = new System.Drawing.Point(286, 136);
             this.buttonRunExcel.Name = "buttonRunExcel";
             this.buttonRunExcel.Size = new System.Drawing.Size(80, 55);
             this.buttonRunExcel.TabIndex = 8;
             this.buttonRunExcel.Text = "Startuj Excel";
             this.buttonRunExcel.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.buttonRunExcel.UseVisualStyleBackColor = true;
+            this.buttonRunExcel.EnabledChanged += new System.EventHandler(this.buttonRunExcel_EnabledChanged);
             this.buttonRunExcel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.buttonRunExcel_MouseClick);
             this.buttonRunExcel.MouseEnter += new System.EventHandler(this.buttonRunExcel_MouseEnter);
             this.buttonRunExcel.MouseLeave += new System.EventHandler(this.anyItem_MouseLeave);
@@ -127,9 +125,9 @@
             this.buttonExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.buttonExit.Image = ((System.Drawing.Image)(resources.GetObject("buttonExit.Image")));
             this.buttonExit.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.buttonExit.Location = new System.Drawing.Point(377, 12);
+            this.buttonExit.Location = new System.Drawing.Point(372, 13);
             this.buttonExit.Name = "buttonExit";
-            this.buttonExit.Size = new System.Drawing.Size(75, 54);
+            this.buttonExit.Size = new System.Drawing.Size(80, 56);
             this.buttonExit.TabIndex = 15;
             this.buttonExit.Text = "Wyjście";
             this.buttonExit.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -143,9 +141,9 @@
             this.buttonSettings.Font = new System.Drawing.Font("Cambria", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.buttonSettings.Image = ((System.Drawing.Image)(resources.GetObject("buttonSettings.Image")));
             this.buttonSettings.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.buttonSettings.Location = new System.Drawing.Point(272, 12);
+            this.buttonSettings.Location = new System.Drawing.Point(286, 13);
             this.buttonSettings.Name = "buttonSettings";
-            this.buttonSettings.Size = new System.Drawing.Size(80, 55);
+            this.buttonSettings.Size = new System.Drawing.Size(80, 56);
             this.buttonSettings.TabIndex = 18;
             this.buttonSettings.Text = "Ustawienia";
             this.buttonSettings.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -162,7 +160,7 @@
             this.infoBox.Enabled = false;
             this.infoBox.Font = new System.Drawing.Font("Cambria", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.infoBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.infoBox.Location = new System.Drawing.Point(12, 299);
+            this.infoBox.Location = new System.Drawing.Point(12, 197);
             this.infoBox.Multiline = true;
             this.infoBox.Name = "infoBox";
             this.infoBox.ReadOnly = true;
@@ -173,6 +171,7 @@
             // 
             // textBoxRaportTitle
             // 
+            this.textBoxRaportTitle.BackColor = System.Drawing.Color.PaleGoldenrod;
             this.textBoxRaportTitle.Cursor = System.Windows.Forms.Cursors.Default;
             this.textBoxRaportTitle.Enabled = false;
             this.textBoxRaportTitle.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -212,8 +211,8 @@
             // panel1
             // 
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.labelReady);
+            this.panel1.Controls.Add(this.makeFile);
             this.panel1.Controls.Add(this.labelFileName);
             this.panel1.Controls.Add(this.labelRaportTitle);
             this.panel1.Controls.Add(this.textBoxRaportTitle);
@@ -227,46 +226,38 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.MaximumSize = new System.Drawing.Size(1280, 555);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(466, 525);
+            this.panel1.Size = new System.Drawing.Size(466, 288);
             this.panel1.TabIndex = 0;
             // 
-            // panel2
+            // makeFile
             // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel2.Controls.Add(this.textBox4);
-            this.panel2.Controls.Add(this.textBox3);
-            this.panel2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panel2.Location = new System.Drawing.Point(12, 398);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(440, 99);
-            this.panel2.TabIndex = 24;
+            this.makeFile.Enabled = false;
+            this.makeFile.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.makeFile.Image = ((System.Drawing.Image)(resources.GetObject("makeFile.Image")));
+            this.makeFile.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.makeFile.Location = new System.Drawing.Point(142, 12);
+            this.makeFile.Name = "makeFile";
+            this.makeFile.Size = new System.Drawing.Size(124, 56);
+            this.makeFile.TabIndex = 25;
+            this.makeFile.Text = "Przerób plik";
+            this.makeFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.makeFile.UseVisualStyleBackColor = true;
+            this.makeFile.EnabledChanged += new System.EventHandler(this.makeFile_EnabledChanged);
+            this.makeFile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.makeFile_MouseClick);
             // 
-            // textBox4
+            // labelReady
             // 
-            this.textBox4.Location = new System.Drawing.Point(14, 57);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(151, 20);
-            this.textBox4.TabIndex = 3;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(14, 19);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(151, 20);
-            this.textBox3.TabIndex = 2;
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button1.Location = new System.Drawing.Point(225, 140);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(127, 56);
-            this.button1.TabIndex = 25;
-            this.button1.Text = "Przerób plik";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.UseVisualStyleBackColor = true;
+            this.labelReady.AutoSize = true;
+            this.labelReady.Font = new System.Drawing.Font("Cambria", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.labelReady.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.labelReady.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelReady.Location = new System.Drawing.Point(109, 148);
+            this.labelReady.Name = "labelReady";
+            this.labelReady.Size = new System.Drawing.Size(112, 28);
+            this.labelReady.TabIndex = 26;
+            this.labelReady.Text = "GOTOWE";
+            this.labelReady.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelReady.Visible = false;
             // 
             // MainWindow
             // 
@@ -274,20 +265,18 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(464, 523);
+            this.ClientSize = new System.Drawing.Size(464, 287);
             this.Controls.Add(this.panel1);
             this.IsMdiContainer = true;
             this.MaximumSize = new System.Drawing.Size(1280, 594);
-            this.MinimumSize = new System.Drawing.Size(480, 550);
             this.Name = "MainWindow";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Importer";
             this.TransparencyKey = System.Drawing.Color.White;
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -305,10 +294,8 @@
         private System.Windows.Forms.Label labelRaportTitle;
         private System.Windows.Forms.Label labelFileName;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button makeFile;
+        private System.Windows.Forms.Label labelReady;
     }
 }
 

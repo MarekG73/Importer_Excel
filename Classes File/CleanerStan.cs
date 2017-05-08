@@ -15,41 +15,70 @@ namespace Importer.Classes_File
             data_blocks = new List<List<string>>();
             bool first_table = false;
             bool last_table = false;
+            bool end_of_page = false;
+            short new_page_start = 0;
+            short header_counter = 0;
 
             while ((readed_line = readedFile.getLine()) != "EOF")
             {
-                if (first_table == false && readed_line.Contains("<TABLE"))//pomiń pierwszy znacznik <TABLE
+                if (first_table == false && readed_line.Contains("<TABLE"))
                 {
                     first_table = true;
                     continue;
                 }
-                if (readed_line.ToString().Contains("<TABLE") && first_table == true)
+                if (readed_line.Contains("<TABLE") && header_counter < 4 && first_table == true)
                 {
-                    table_block = new List<string>();
-                    while (!readed_line.Contains("</TABLE>"))
+                    header_counter++;
+                }
+                if (readed_line.Contains("</TABLE>") && first_table == true && header_counter == 4)
+                {
+                    end_of_page = true;
+                }
+                if (readed_line.Contains("<TABLE") && end_of_page == true && new_page_start < 5 && header_counter == 4)
+                {
+                    new_page_start++;
+                    continue;
+                }
+                if (readed_line.Contains("<TABLE") && end_of_page == true && new_page_start == 5 && header_counter == 4)
+                {
+                    end_of_page = false;
+                }
+                if (readed_line.Contains("<TABLE") && first_table == true && end_of_page == false)
+                {
+                    new_page_start = 0;
+                    while (!(readed_line = readedFile.getLine()).Contains("</TABLE>"))
                     {
-                        if ((pattern_result = findPattern.search(readed_line)) == "Strona")
+                        table_block = new List<string>();
+                        if (readed_line.Contains("<TR>"))
                         {
-                            break;
-                        }
-                        if ((pattern_result = findPattern.search(readed_line)) != null)
-                        {
-                            table_block.Add(pattern_result);
-                        }
-                        readed_line = readedFile.getLine();
-                        if (readed_line.ToString().ToLower().Contains("suma"))
-                        {
-                            last_table = true;
+                            while (!(readed_line = readedFile.getLine()).Contains("</TR>"))
+                            {
+                                if ((pattern_result = findPattern.search(readed_line)) != null)
+                                {
+                                    if (pattern_result == "Strona")
+                                    {
+                                        break;
+                                    }
+                                    if (pattern_result.ToLower().Contains("suma"))
+                                    {
+                                        last_table = true;
+                                        break;
+                                    }
+                                    table_block.Add(pattern_result);
+                                }
+                            }
+                            data_blocks.Add(table_block);
                         }
                     }
-                    data_blocks.Add(table_block);
-
                 }
                 //dodaje ostatnią pozycję, błędnie umieszczoną na końcu poza blokami
                 if (last_table == true && (pattern_result = findPattern.search(readed_line.ToString())) != null && pattern_result.Length > 2)
                 {
                     table_block = new List<string>();
+                    fillSpaces(table_block, 7);
+                    table_block.Add("Suma");
                     table_block.Add(pattern_result);
+                    table_block.Add(" ");
                     data_blocks.Add(table_block);
                 }
             }
@@ -57,59 +86,46 @@ namespace Importer.Classes_File
 
         override protected void setNewColumnNames()
         {
-            columns_names = new List<string>(){"Nr. zapasu", "Opis 1", "Opis 2", "Data", "Typ zapisu", "Dostawca",
+            data_blocks.RemoveAt(0);//usuwa stare nazwy kolumn
+            columns_names = new List<string>(){"Nr. dokumentu", "Data", "Typ zapisu", "Dostawca",
                     "Podst. j.m.", "Ilość", "Nr. partii", "Koszt jednostkowy", "Wycena zapasów", "Kod lokalizacji" };
-        }
-        //tworzy podsumowanie całości - ostatnia linia
-        override protected void makeSummary()
-        {
-            summary = new List<string>();
-            int sum_block_start = data_blocks.FindIndex((data_blocks) => { return data_blocks.Count == 7; });
-            int sum_position = data_blocks[sum_block_start].Count - 1;
-            
-            fillSpaces(summary, 9);
-            summary.Add(data_blocks[sum_block_start][sum_position]);
-            summary.Add(data_blocks[sum_block_start + 1][0]);
-            summary.Add(" ");
-
-            data_blocks[sum_block_start].RemoveAt(sum_position);
-            data_blocks.RemoveAt(sum_block_start + 1);
         }
         //tworzy linie danych
         override protected void makeData()
         {
-            bool data = false;
             data_lines = new List<List<string>>(header);
-
             data_lines.Add(columns_names);
 
             foreach (List<string> block in data_blocks)
             {
                 if (block.Count == 2)
                 {
-                    temp_data_line = new List<string>(block);
-                    data = true;
+                    splitCell(block);
+                    data_lines.Add(block);
+                    continue;
                 }
-                if (data == true && block.Count == 10)
+                if (block.Count == 9)
                 {
-                    temp_data_line.AddRange(block);
-                    splitCell();
-                    data_lines.Add(temp_data_line);
-                    data = false;
+                    block.Insert(3, " ");
+                    data_lines.Add(block);
+                    continue;
                 }
-                if (data == false && block.Count == 6)
+                if (block.Count == 10)
+                {
+                    data_lines.Add(block);
+                    continue;
+                }
+                if (block.Count == 6)
                 {
                     temp_data_line = new List<string>();
-                    fillSpaces(temp_data_line, 4);
+                    fillSpaces(temp_data_line, 2);
 
-                    block.InsertRange(2, temp_data_line);
-                    block.Insert(8, " ");
-                    block.Add(" ");
-                    
+                    block.InsertRange(0, temp_data_line);
+                    block.Insert(6, " ");
                     data_lines.Add(block);
+                    continue;
                 }
             }
-            data_lines.Add(summary);
         }
     }
 }

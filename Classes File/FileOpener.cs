@@ -12,8 +12,7 @@ namespace Importer.Classes_File
         private OpenFileDialog openDialog;
         private FileStream file;
         private StreamReader stream;
-        private Encoding enc;
-
+        
         // Instancja okienka używanego do wyszukania pliku przekazywana jest jako parametr do konstruktora.
         public FileOpener(OpenFileDialog dialog)
         {
